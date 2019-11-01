@@ -3,8 +3,8 @@
 ###
 FROM bitnami/minideb AS base
 
-ENV PACKAGES="gawk make python python-serial sed"
-ENV BUILD_PACKAGES="autoconf automake bison bzip2 ca-certificates curl flex g++ gcc git gperf help2man libexpat1-dev libncurses5-dev libtool libtool-bin patch python-dev texinfo wget xz-utils"
+ENV PACKAGES="gawk make python python-serial sed git"
+ENV BUILD_PACKAGES="autoconf automake bison bzip2 ca-certificates curl flex g++ gcc  gperf help2man libexpat1-dev libncurses5-dev libtool libtool-bin patch python-dev texinfo wget xz-utils"
 
 
 
