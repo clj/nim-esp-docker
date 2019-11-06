@@ -1,3 +1,3 @@
 FROM nimesp/esp8266
 
-RUN install_packages g++ gcc
+RUN install_packages g++ gcc patch
