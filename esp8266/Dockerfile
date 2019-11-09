@@ -3,8 +3,8 @@
 ###
 FROM bitnami/minideb AS base
 
-ENV PACKAGES="ca-certificates gawk git make python python-serial sed zip"
-ENV BUILD_PACKAGES="autoconf automake bison bzip2 curl flex g++ gcc  gperf help2man libexpat1-dev libncurses5-dev libtool libtool-bin patch python-dev texinfo wget xz-utils"
+ENV PACKAGES="ca-certificates curl gawk git make python python-serial sed zip"
+ENV BUILD_PACKAGES="autoconf automake bison bzip2 flex g++ gcc  gperf help2man libexpat1-dev libncurses5-dev libtool libtool-bin patch python-dev texinfo wget xz-utils"
 
 
 
@@ -56,4 +56,4 @@ COPY --from=build --chown=root:root /opt /opt
 ENV PATH="/opt/nim/bin:${PATH}"
 ENV PATH="$HOME/.nimble/bin:${PATH}"
 ENV PATH="/opt/esp-open-sdk/xtensa-lx106-elf/bin/:$PATH"
-ENV XTENSA_TOOLS_ROOT="/opt/esp-open-sdk/xtensa-lx106-elf/bin"
+ENV XTENSA_TOOLS_ROOT="/opt/esp-open-sdk/xtensa-lx106-elf/bin/"
