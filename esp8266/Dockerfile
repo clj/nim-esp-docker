@@ -29,7 +29,7 @@ USER build
 
 WORKDIR /tmp
 
-RUN curl -sL "http://nim-lang.org/download/nim-1.0.2.tar.xz" \
+RUN curl -sL "http://nim-lang.org/download/nim-1.2.0.tar.xz" \
     |tar xJ --strip-components=1 -C nim && \
     cd nim && sh build.sh && bin/nim c koch && ./koch tools && \
     sh install.sh /opt && cp bin/nimble bin/nimpretty /opt/nim/bin && \
