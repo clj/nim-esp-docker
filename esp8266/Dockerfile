@@ -3,8 +3,8 @@
 ###
 FROM bitnami/minideb AS base
 
-ENV PACKAGES="ca-certificates curl gawk git make python python-serial sed zip"
-ENV BUILD_PACKAGES="autoconf automake bison bzip2 flex g++ gcc  gperf help2man libexpat1-dev libncurses5-dev libtool libtool-bin patch python-dev texinfo wget xz-utils"
+ENV PACKAGES="ca-certificates curl gawk git make python sed zip"
+ENV BUILD_PACKAGES="autoconf automake bison bzip2 flex g++ gcc  gperf help2man libexpat1-dev libncurses5-dev libtool libtool-bin patch python-dev python-pip python-setuptools texinfo wget xz-utils"
 
 
 
@@ -20,6 +20,7 @@ RUN install_packages $PACKAGES $BUILD_PACKAGES
 RUN mkdir -p /opt/esp-open-sdk && chown build.build /opt/esp-open-sdk && \
     mkdir -p /tmp/nim && chown build.build /tmp/nim && \
     mkdir -p /opt/nim && chown build.build /opt/nim && \
+    mkdir -p /opt/python && chown build.build /opt/python && \
     mkdir -p /opt/nimble && chown build.build /opt/nimble && \
     mkdir -p /home/build && chown build.build /home/build
 
@@ -42,6 +43,8 @@ RUN git clone --recurse-submodules https://github.com/pfalcon/esp-open-sdk.git &
     make STANDALONE=n && rm -rf .git crosstool-NG/.build sdk \
     ESP8266_NONOS_SDK-2.1.0-18-g61248df examples *.patch *.c
 
+RUN pip install wheel && pip install --prefix=/opt/python esptool
+
 
 
 ###
@@ -56,4 +59,6 @@ COPY --from=build --chown=root:root /opt /opt
 ENV PATH="/opt/nim/bin:${PATH}"
 ENV PATH="$HOME/.nimble/bin:${PATH}"
 ENV PATH="/opt/esp-open-sdk/xtensa-lx106-elf/bin/:$PATH"
+ENV PATH="/opt/python/bin:${PATH}"
 ENV XTENSA_TOOLS_ROOT="/opt/esp-open-sdk/xtensa-lx106-elf/bin/"
+ENV PYTHONPATH="/opt/python/lib/python2.7/site-packages/"
