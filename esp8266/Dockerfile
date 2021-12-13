@@ -3,7 +3,7 @@
 ###
 FROM bitnami/minideb AS base
 
-ENV PACKAGES="ca-certificates curl gawk git make python sed zip"
+ENV PACKAGES="ca-certificates curl gawk git make python sed zip unzip"
 ENV BUILD_PACKAGES="autoconf automake bison bzip2 flex g++ gcc  gperf help2man libexpat1-dev libncurses5-dev libtool libtool-bin patch python-dev python-pip python-setuptools texinfo wget xz-utils"
 
 
@@ -24,8 +24,6 @@ RUN mkdir -p /opt/esp-open-sdk && chown build.build /opt/esp-open-sdk && \
     mkdir -p /opt/nimble && chown build.build /opt/nimble && \
     mkdir -p /home/build && chown build.build /home/build
 
-COPY crosstool-ng-bash5.patch crosstool-ng-bash5.patch
-
 USER build
 
 WORKDIR /tmp
@@ -38,10 +36,9 @@ RUN curl -sL "http://nim-lang.org/download/nim-1.2.0.tar.xz" \
 
 WORKDIR /opt
 
-RUN git clone --recurse-submodules https://github.com/pfalcon/esp-open-sdk.git && \
-    cd esp-open-sdk/crosstool-NG && patch -p0 < /crosstool-ng-bash5.patch && cd .. && \
-    make STANDALONE=n && rm -rf .git crosstool-NG/.build sdk \
-    ESP8266_NONOS_SDK-2.1.0-18-g61248df examples *.patch *.c
+RUN git clone --recurse-submodules https://github.com/esp-open-sdk/esp-open-sdk.git && \
+    cd esp-open-sdk/sdk/ && make STANDALONE=n VENDOR_SDK=3.0.5 && rm -rf .git crosstool-NG/.build sdk \
+    ESP8266_NONOS_SDK-3.0.5 ESP8266_NONOS_SDK-3.0.5.zip examples *.patch *.c
 
 RUN pip install wheel && pip install --prefix=/opt/python esptool
 
@@ -58,7 +55,7 @@ COPY --from=build --chown=root:root /opt /opt
 
 ENV PATH="/opt/nim/bin:${PATH}"
 ENV PATH="$HOME/.nimble/bin:${PATH}"
-ENV PATH="/opt/esp-open-sdk/xtensa-lx106-elf/bin/:$PATH"
+ENV PATH="/opt/esp-open-sdk/sdk/xtensa-lx106-elf/bin/:$PATH"
 ENV PATH="/opt/python/bin:${PATH}"
-ENV XTENSA_TOOLS_ROOT="/opt/esp-open-sdk/xtensa-lx106-elf/bin/"
+ENV XTENSA_TOOLS_ROOT="/opt/esp-open-sdk/sdk/xtensa-lx106-elf/bin/"
 ENV PYTHONPATH="/opt/python/lib/python2.7/site-packages/"
