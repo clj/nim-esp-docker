@@ -47,7 +47,7 @@ RUN pip install wheel && pip install --prefix=/opt/python esptool
 ###
 # Product
 ###
-FROM base
+FROM base AS esp8266
 
 RUN install_packages $PACKAGES
 
@@ -59,3 +59,7 @@ ENV PATH="/opt/esp-open-sdk/sdk/xtensa-lx106-elf/bin/:$PATH"
 ENV PATH="/opt/python/bin:${PATH}"
 ENV XTENSA_TOOLS_ROOT="/opt/esp-open-sdk/sdk/xtensa-lx106-elf/bin/"
 ENV PYTHONPATH="/opt/python/lib/python2.7/site-packages/"
+
+FROM esp8266 AS esp8266-gcc
+
+RUN install_packages g++ gcc patch

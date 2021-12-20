@@ -1,0 +1,50 @@
+name: Build Docker images
+
+on:
+  release:
+    types: [published]
+  push: {}
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    name: Build Docker images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to the Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build esp8266 Docker images
+        uses: docker/build-push-action@v2
+
+      - name: Publish esp8266 Docker image
+        uses: docker/build-push-action@v2
+        with:
+          target: esp8266
+          tags: ghcr.io/clj/esp8266:latest
+          push: true
+        if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+
+      - name: Publish esp8266-gcc Docker image
+        uses: docker/build-push-action@v2
+        with:
+          target: esp8266-gcc
+          tags: ghcr.io/clj/esp8266-gcc:latest
+          push: true
+        if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
