@@ -28,7 +28,7 @@ USER build
 
 WORKDIR /tmp
 
-RUN curl -sL "https://nim-lang.org/download/nim-1.6.2.tar.xz" \
+RUN curl -sL "https://nim-lang.org/download/nim-1.6.6.tar.xz" \
     |tar xJ --strip-components=1 -C nim && \
     cd nim && sh build.sh && bin/nim c koch && ./koch tools && \
     sh install.sh /opt && cp bin/nimble bin/nimpretty /opt/nim/bin && \
